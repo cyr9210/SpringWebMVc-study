@@ -5,28 +5,46 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
-  <filter>
-    <filter-name>myfilter</filter-name>
-    <filter-class>bong.spring.MyFileter</filter-class>
-  </filter>
+  <context-param>
+    <param-name>contextClass</param-name>
+    <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+  </context-param>
 
-  <filter-mapping>
-    <filter-name>myfilter</filter-name>
-    <servlet-name>hello</servlet-name>
-  </filter-mapping>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>bong.spring.AppConfig</param-value>
+  </context-param>
 
   <listener>
-    <listener-class>bong.spring.MyListener</listener-class>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
   <servlet>
-    <servlet-name>hello</servlet-name>
-    <servlet-class>bong.spring.HelloServlet</servlet-class>
+    <servlet-name>app</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextClass</param-name>
+      <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </init-param>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>bong.spring.WebConfig</param-value>
+    </init-param>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>hello</servlet-name>
-    <url-pattern>/hello</url-pattern>
+    <servlet-name>app</servlet-name>
+    <url-pattern>/app/*</url-pattern>
   </servlet-mapping>
+
+<!--  <servlet>-->
+<!--    <servlet-name>hello</servlet-name>-->
+<!--    <servlet-class>bong.spring.HelloServlet</servlet-class>-->
+<!--  </servlet>-->
+
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>hello</servlet-name>-->
+<!--    <url-pattern>/hello</url-pattern>-->
+<!--  </servlet-mapping>-->
 
 </web-app>

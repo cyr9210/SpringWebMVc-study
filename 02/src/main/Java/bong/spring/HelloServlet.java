@@ -1,5 +1,8 @@
 package bong.spring;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +18,14 @@ public class HelloServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("doget");
-        resp.getWriter().write("hello, servlet " + getName());
+//        resp.getWriter().write("hello, servlet " + getName());
+        resp.getWriter().write("use applicationcontext getname : " + getNameIoC());
+    }
+
+    private String getNameIoC() {
+        ApplicationContext applicationContext = (ApplicationContext)getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        MyService service = applicationContext.getBean(MyService.class);
+        return service.getNmae();
     }
 
     private Object getName() {
