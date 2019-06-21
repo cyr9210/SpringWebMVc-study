@@ -8,10 +8,12 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Setter @Getter
 @ToString
 @Entity
+@XmlRootElement
 public class Person {
 
     @Id @GeneratedValue

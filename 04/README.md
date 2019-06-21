@@ -50,4 +50,149 @@
 - AnotherInterceptor는 PathPattern에 걸리지 않아서 제외
 <br><br>
 
+### 리소스 핸들러
+- 이미지, 자바스크립트, css, html 파일 같은 리소스를 처리하는 핸들러
+- [reference 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html#addResourceHandlers-org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry-)
 
+#### Default Servlet
+- 서블릿 컨테이너가 기본으로 제공하는 서블릿으로 정적인 리소를 처리할 때, 사용한다.
+    - 예)..[톰캣문서](https://tomcat.apache.org/tomcat-9.0-doc/default-servlet.html)
+
+#### 스프링 MVC 리소스 핸들러 맵핑 등록
+- 가장 낮은 우선 순위로 등록.
+    - 다른 핸들러 맵핑이 “/” 이하 요청을 처리하도록 허용하고
+    - 최종적으로 리소스 핸들러가 처리하도록.
+- 스프링 부트를 사용하는 경우 
+
+#### 리소스 핸들러 설정
+![springwebmvc](images/springwebmvc07-4.png)
+- 어떤 요청 패턴을 지원할 것인가
+- 어디서 리소스를 찾을 것인가
+- 캐싱
+- ResourceResolver: 요청에 해당하는 리소스를 찾는 전략
+    - 캐싱, 인코딩(gzip, brotli), WebJar, ...
+- ResourceTransformer: 응답으로 보낼 리소스를 수정하는 전략
+    - 캐싱, CSS 링크, HTML5 AppCache, ...
+- ResourceResolver, ResourceTransformer 관련 내용은 [reference](https://www.slideshare.net/rstoya05/resource-handling-spring-framework-41)를 참고
+    
+- 스프링 부트
+    - 기본 정적 리소스 핸들러와 캐싱 제공
+<br><br>
+
+### HTTP 메세지 컨버터
+- 요청 본문에서 메시지를 읽어들이거나(@RequestBody), 응답 본문에 메시지를 작성할 때(@ResponseBody) 사용한다.
+- RestController는 모든 메소드에 @ResponseBody가 생략되어있는 것.
+- @RequestBody
+    - 요청 본문의 문자열을 받는다.
+    - 요청 본문의 문자열을 변환
+        - xml, JSON등을 객체로 변환
+
+#### 기본 HTTP 메시지 컨버터
+- 바이트 배열 컨버터
+- 문자열 컨버터
+- Resource 컨버터
+- Form 컨버터 (폼 데이터 to/from MultiValueMap<String, String>)
+    - Map → 폼 데이터 or 폼 데이터 → Map 
+
+#### 의존성이 있을 때 등록이되는 메세지 컨버터
+- xml
+    - (JAXB2 컨버터)
+- Json    
+    - (Jackson2 컨버터)
+    - (Jackson 컨버터)
+    - (Gson 컨버터)
+- feed
+    - (Atom 컨버터)
+    - (RSS 컨버터)
+- ...
+
+#### 설정 방법
+- 기본으로 등록해주는 컨버터에 새로운 컨버터 추가하기: extendMessageConverters
+    ![springwebmvc](images/springwebmvc07-5.png)
+    - [reference 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html#extendMessageConverters-java.util.List-)
+- 기본으로 등록해주는 컨버터는 다 무시하고 새로 컨버터 설정하기: configureMessageConverters
+    ![springwebmvc](images/springwebmvc07-6.png)
+    - [reference 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html#configureMessageConverters-java.util.List-)
+- 의존성 추가로 컨버터 등록하기 (제일 많이 사용하게 될 것이며 추천한다.)
+    - 메이븐 또는 그래들 설정에 의존성을 추가하면 그에 따른 컨버터가 자동으로 등록된다.
+    - WebMvcConfigurationSupport
+    - (이 기능 자체는 스프링 프레임워크의 기능임, 스프링 부트 아님.)
+[참고](https://www.baeldung.com/spring-httpmessageconverter-rest)
+
+#### JSON용 HTTP 메세지 컨버터 
+- 스프링부트를 사용하지 않는 경우 
+    - 사용하고 싶은 JSON 라이브러리를 의존성으로 추가
+        - GSON
+        - JacksonJSON
+        - JacksonJSON 2
+
+- 스프링 부트를 사용하는 겨우
+    - 기본적으로 JacksonJSON2가 의존성에 들어있다.
+    - 즉, JSON용 HTTP 메세지 컨버터가 등록되어있다.
+
+- ObjectMapper는 스프링부트에서 의존성을 자동으러 주입해준다.
+- TestCode
+    ![springwebmvc](images/springwebmvc07-7.png)
+- JsonPath문법
+    - https://github.com/json-path/JsonPath
+    - http://jsonpath.com/
+    
+#### XML용 HTTP 메세지 컨버터
+- OXM(Object-XML Mapper) 라이브러리 중에 스프링이 지원하는 의존성 추가
+    - JacksonXML
+    - JAXB
+    
+- Mashaller : 객체 → xml
+- UnMashaller : xml → 객체
+    
+- 스프링 부트가 기본으로 관련 의존성을 추가해주지 않는다.
+    
+- 의존성 추가
+    ```
+    <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.jaxb</groupId>
+        <artifactId>jaxb-runtime</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-oxm</artifactId>
+        <version>${spring-framework.version}</version>
+    </dependency>
+    ```
+    
+- Marshaller 등록
+    - xml로 변환할 클래스의 패키지이름을 설정해준다.
+        ![springwebmvc](images/springwebmvc07-8.png)    
+    - 도메인 클래스에 @XmlRootElement 애노테이션 추가
+        ![springwebmvc](images/springwebmvc07-9.png)
+        
+- TestCode
+    ![springwebmvc](images/springwebmvc07-10.png)
+- Xpath 문법
+    - https://www.w3schools.com/xml/xpath_syntax.asp
+    - https://www.freeformatter.com/xpath-tester.html
+<br><br>
+
+### 그밖에 WebMvcConfigurer 설정
+- [reference 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/config/annotation/WebMvcConfigurer.html)
+
+- CORS 설정
+    - Cross Origin 요청 처리 설정
+    - 같은 도메인에서 온 요청이 아니더라도 처리를 허용하고 싶다면 설정한다.
+- 리턴 값 핸들러 설정
+    - 스프링 MVC가 제공하는 기본 리턴 값 핸들러 이외에 리턴 핸들러를 추가하고 싶을 때 설정한다.
+- 아큐먼트 리졸버 설정
+    - 스프링 MVC가 제공하는 기본 아규먼트 리졸버 이외에 커스텀한 아규먼트 리졸버를 추가하고 싶을 때 설정한다.
+- 뷰 컨트롤러
+    - 단순하게 요청 URL을 특정 뷰로 연결하고 싶을 때 사용할 수 있다.
+- 비동기 설정
+    - 비동기 요청 처리에 사용할 타임아웃이나 TaskExecutor를 설정할 수 있다.
+- 뷰 리졸버 설정
+    - 핸들러에서 리턴하는 뷰 이름에 해당하는 문자열을 View 인스턴스로 바꿔줄 뷰 리졸버를 설정한다.
+- Content Negotiation 설정
+    - 요청 본문 또는 응답 본문을 어떤 (MIME) 타입으로 보내야 하는지 결정하는 전략을설정한다.
+<br><br>
