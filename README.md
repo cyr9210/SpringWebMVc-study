@@ -16,7 +16,7 @@
 
 #### 04 : [스프링 MVC 설정 - 핸들러 인터셉터, 리소스 핸들러, HTTP 메세지 컨버터, 기타 설정](https://cyr9210.github.io/2019/06/24/Spring/springwebmvc07/)
 
-#### 05 : [스프링 MVC 설정 - HTTP 요청 맵핑하기](https://cyr9210.github.io/2019/06/24/Spring/springwebmvc08/)
-
+### 스프링 MVC 활용
+#### 05 : [스프링 MVC 활용 - HTTP 요청 맵핑하기](https://cyr9210.github.io/2019/06/24/Spring/springwebmvc08/)
 
 
