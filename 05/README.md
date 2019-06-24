@@ -118,3 +118,91 @@
         - ex).. "/bong?type=xml"
 <br><br>
 
+### HTTP 요청 맵핑하기 - 미디어 타입 맵핑
+- 특정한 타입의 데이터를 담고 있는 요청만 처리하는 핸들러
+    ![springwebmvc](images/springwebmvc08-5.png)
+    - @RequestMapping(consumes=MediaType.APPLICATION_JSON_UTF8_VALUE)
+        - 문자열을 입력하는 대신 MediaType을 사용하면 상수를 (IDE에서) 자동 완성으로 사용할 수있다.
+        - MediaType.APPLICATION_JSON_UTF8_VALUE은 문자열로 직접 넣어줄 수 있으나 type safe하지 않다.
+    - Content-Type 헤더로 필터링
+    - 매치 되는 않는 경우에 415 Unsupported Media Type 응답
+- 특정한 타입의 응답을 만드는 핸들러
+    ![springwebmvc](images/springwebmvc08-6.png)
+    - @RequestMapping(produces=”application/json”)
+    - Accept 헤더로 필터링 (하지만 살짝... 오묘함)
+    - 매치 되지 않는 경우에 406 Not Acceptable 응답
+
+- 클래스에 선언한 @RequestMapping에 사용한 것과 조합이 되지 않고 메소드에 사용한 @RequestMapping의 설정으로 덮어쓴다.
+- Not (!)을 사용해서 특정 미디어 타입이 아닌 경우로 맵핑 할 수도 있다.
+<br><br>
+
+### HTTP 요청 맵핑하기 - 헤더와 매개변수
+- 특정한 헤더가 있는 요청을 처리하고 싶은 경우
+    - @RequestMapping(headers = “key”)
+- 특정한 헤더가 없는 요청을 처리하고 싶은 경우
+    - @RequestMapping(headers = “!key”)
+- 특정한 헤더 키/값이 있는 요청을 처리하고 싶은 경우
+    - @RequestMapping(headers = “key=value”)
+- 특정한 요청 매개변수 키를 가지고 있는 요청을 처리하고 싶은 경우
+    - @RequestMapping(params = “a”)
+- 특정한 요청 매개변수가 없는 요청을 처리하고 싶은 경우
+    - @RequestMapping(params = “!a”)
+- 특정한 요청 매개변수 키/값을 가지고 있는 요청을 처리하고 싶은 경우
+    - @RequestMapping(params = “a=b”)
+<br><br>
+
+### HTTP 요청 맵핑하기 - HEAD와 OPTIONS 요청 처리
+
+#### 우리가 구현하지 않아도 스프링 웹 MVC에서 자동으로 처리하는 HTTP Method
+- HEAD
+- OPTIONS
+
+#### HEAD
+images
+- GET 요청과 동일하지만 **응답 본문을 받아오지 않고 응답 헤더**만 받아온다.
+    
+
+#### OPTIONS
+images
+- 사용할 수 있는 HTTP Method 제공
+- 서버 또는 특정 리소스가 제공하는 기능을 확인할 수 있다.
+- 서버는 Allow 응답 헤더에 사용할 수 있는 HTTP Method 목록을 제공해야 한다.
+
+#### 참고
+- https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
+- https://github.com/spring-projects/spring-framework/blob/master/spring-test/src/test/java/org/springframework/test/web/servlet/samples/standalone/resultmatchers/HeaderAssertionTests.java
+<br><br>
+
+### HTTP 요청 맵핑하기 - 커스텀 애노테이션
+#### @RequestMapping 애노테이션을 메타 애노테이션으로 사용하기
+- @GetMapping 같은 커스텀한 애노테이션을 만들 수 있다.
+
+#### 메타(Meta) 애노테이션
+- 애노테이션에 사용할 수 있는 애노테이션
+- 스프링이 제공하는 대부분의 애노테이션은 메타 애노테이션으로 사용할 수 있다.
+
+#### 조합(Composed) 애노테이션
+- 한개 혹은 여러 메타 애노테이션을 조합해서 만든 애노테이션
+- 코드를 간결하게 줄일 수 있다.
+- 보다 구체적인 의미를 부여할 수 있다.
+
+#### @Retention
+- 해당 애노테이션 정보를 언제까지 유지할 것인가.
+- Source: 소스 코드까지만 유지. 즉, 컴파일 하면 해당 애노테이션 정보는 사라진다는 이야기.
+- Class: 컴파인 한 .class 파일에도 유지. 즉 런타임 시, 클래스를 메모리로 읽어오면 해당 정보는 사라진다.
+- Runtime: 클래스를 메모리에 읽어왔을 때까지 유지! 코드에서 이 정보를 바탕으로 특정 로직을 실행할 수 있다.
+
+#### @Target
+- 해당 애노테이션을 어디에 사용할 수 있는지 결정한다.
+- 배열로 여러 엘리먼트도 지정 가능하다.
+
+#### @Documented
+- 해당 애노테이션을 사용한 코드의 문서에 그 애노테이션에 대한 정보를 표기할지 결정한다.
+
+#### 메타 애노테이션
+- https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beansmeta-annotations
+- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/annotation/AliasFor.html
+<br><br>
+
+
+
