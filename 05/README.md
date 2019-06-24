@@ -158,12 +158,12 @@
 - OPTIONS
 
 #### HEAD
-images
+![springwebmvc](images/springwebmvc08-7.png)
 - GET 요청과 동일하지만 **응답 본문을 받아오지 않고 응답 헤더**만 받아온다.
     
 
 #### OPTIONS
-images
+![springwebmvc](images/springwebmvc08-8.png)
 - 사용할 수 있는 HTTP Method 제공
 - 서버 또는 특정 리소스가 제공하는 기능을 확인할 수 있다.
 - 서버는 Allow 응답 헤더에 사용할 수 있는 HTTP Method 목록을 제공해야 한다.
