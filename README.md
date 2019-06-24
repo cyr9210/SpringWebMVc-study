@@ -14,5 +14,9 @@
 
 #### 03 : [스프링 부트에서 JSP 사용하기, WAR 파일로 배포하기](https://cyr9210.github.io/2019/05/31/Spring/springwebmvc05/)
 
+#### 04 : [스프링 MVC 설정 - 핸들러 인터셉터, 리소스 핸들러, HTTP 메세지 컨버터, 기타 설정](https://cyr9210.github.io/2019/06/24/Spring/springwebmvc07/)
+
+#### 05 : [https://cyr9210.github.io/2019/06/24/Spring/springwebmvc08/](https://cyr9210.github.io/2019/06/24/Spring/springwebmvc08/)
+
 
 
